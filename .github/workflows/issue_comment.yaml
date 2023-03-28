@@ -26,15 +26,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup gh
-        uses: actions/setup-gh-action@v1
+        run: gh auth login --with-token < "${{ secrets.GITHUB_TOKEN }}"
       - name: Create comment with API
-        run: |
-          gh api -X POST \
-            https://api.github.com/repos/${REPOSITORY}/issues/${ISSUE_NUMBER}/comments \
-            -f body='
-            Comment via the API with the action
-            '
+        - run: gh issue comment $ISSUE --body "Thank you for opening this issue!"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPOSITORY: ${{ github.event.repository.name }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE: ${{ github.event.issue.html_url }}
